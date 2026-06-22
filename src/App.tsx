@@ -7,14 +7,14 @@ import { useI18n } from '@/lib/i18n'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Topbar } from '@/components/layout/Topbar'
 import { FilterBar } from '@/components/layout/FilterBar'
-import { AminPanel } from '@/components/layout/AminPanel'
+import { AmirPanel } from '@/components/layout/AmirPanel'
 
 import { ExecutivePage } from '@/pages/Executive'
 import { RequestTypePage } from '@/pages/RequestType'
 import { DepartmentsPage } from '@/pages/Departments'
 import { UploadPage } from '@/pages/Upload'
 import { SettingsPage } from '@/pages/Settings'
-import { AminPage } from '@/pages/Amin'
+import { AmirPage } from '@/pages/Amir'
 import { CapacityPage } from '@/pages/Capacity'
 
 export default function App() {
@@ -56,12 +56,13 @@ export default function App() {
                 <Route path="/request-type/:code" element={<RequestTypePage />} />
                 <Route path="/upload" element={<UploadPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
-                <Route path="/amin" element={<AminPage />} />
+                <Route path="/amir" element={<AmirPage />} />
+              <Route path="/amin" element={<AmirPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
           </div>
-          <AminPanel />
+          <AmirPanel />
         </div>
       </FilterProvider>
     </SidebarProvider>

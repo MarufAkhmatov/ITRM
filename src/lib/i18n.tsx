@@ -14,7 +14,7 @@ const D: Dict = {
   'nav.capacity':           { en: 'Capacity (Phase 2)',   ru: 'Ёмкость (этап 2)', uz: 'Sigʻim (2-bosqich)' },
   'nav.upload':             { en: 'Upload & ETL',         ru: 'Загрузка и ETL',  uz: 'Yuklash va ETL' },
   'nav.settings':           { en: 'Settings',             ru: 'Настройки',       uz: 'Sozlamalar' },
-  'nav.amin':               { en: 'AMIN Copilot',         ru: 'Помощник AMIN',   uz: 'AMIN yordamchi' },
+  'nav.amir':               { en: 'AMIR Copilot',         ru: 'Помощник AMIR',   uz: 'AMIR yordamchi' },
 
   // topbar
   'topbar.title':           { en: 'IT Resource Management — Executive Analytics',
@@ -95,16 +95,24 @@ const D: Dict = {
                               ru: 'Панель по типу запроса · код:',
                               uz: 'Soʻrov turi boʻyicha boshqaruv paneli · kod:' },
 
-  // amin
-  'amin.title':             { en: 'AMIN — IT Resource Copilot',
-                              ru: 'AMIN — ИТ-помощник',
-                              uz: 'AMIN — IT yordamchisi' },
-  'amin.subtitle':          { en: 'Ask about departments, resources, trends, forecasts. Answers are grounded on the active dataset.',
-                              ru: 'Спрашивайте о подразделениях, ресурсах, трендах и прогнозах. Ответы построены на активном наборе данных.',
-                              uz: 'Boʻlimlar, resurslar, trendlar va prognozlar haqida soʻrang. Javoblar faol maʼlumotlar asosida tuziladi.' },
-  'amin.placeholder':       { en: 'Ask AMIN…',        ru: 'Спросите AMIN…',     uz: 'AMIN dan soʻrang…' },
-  'amin.send':              { en: 'Send',             ru: 'Отправить',          uz: 'Yuborish' },
-  'amin.thinking':          { en: 'AMIN is thinking…',ru: 'AMIN думает…',       uz: 'AMIN oʻylanmoqda…' },
+  // amir
+  'amir.title':             { en: 'AMIR — IT Resource Copilot',
+                              ru: 'AMIR — ИТ-помощник',
+                              uz: 'AMIR — IT yordamchisi' },
+  'amir.subtitle':          { en: 'Ask in any language about departments, resources, trends or forecasts. AMIR answers in the language of your question.',
+                              ru: 'Спрашивайте на любом языке о подразделениях, ресурсах, трендах и прогнозах. AMIR отвечает на языке вопроса.',
+                              uz: 'Boʻlimlar, resurslar, trendlar va prognozlar haqida istalgan tilda soʻrang. AMIR savol tilida javob beradi.' },
+  'amir.placeholder':       { en: 'Ask AMIR in EN / RU / UZ…',
+                              ru: 'Спросите AMIR на EN / RU / UZ…',
+                              uz: 'EN / RU / UZ tillarida AMIR dan soʻrang…' },
+  'amir.send':              { en: 'Send',             ru: 'Отправить',          uz: 'Yuborish' },
+  'amir.thinking':          { en: 'AMIR is thinking…',ru: 'AMIR думает…',       uz: 'AMIR oʻylanmoqda…' },
+  'amir.empty':             { en: 'Try an example above, or type your own question in any language.',
+                              ru: 'Попробуйте пример выше или задайте свой вопрос на любом языке.',
+                              uz: 'Yuqoridagi misollardan birini sinab koʻring yoki istalgan tilda savolingizni yozing.' },
+  'amir.empty_panel':       { en: 'Try: "executive summary", "top departments by RAM", or "forecast CPU next year".',
+                              ru: 'Попробуйте: «сводка», «топ подразделений по RAM», «прогноз CPU на следующий год».',
+                              uz: 'Sinab koʻring: «sarhisob», «RAM boʻyicha top boʻlimlar», «keyingi yilga CPU prognozi».' },
 
   // settings
   'set.title':              { en: 'Settings',         ru: 'Настройки',          uz: 'Sozlamalar' },

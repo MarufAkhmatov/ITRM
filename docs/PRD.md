@@ -42,7 +42,7 @@ Purpose: compare *allocated* (Jira) against *actual available* capacity.
 - Global filter bar (Year/Quarter/Month, Dept, Env, Type, Status, Priority)
 - Settings (cost rates, field-mapping primer)
 - Exports (XLSX, CSV, JSON)
-- AMIN copilot (deterministic intent router on real data)
+- AMIR copilot (deterministic intent router on real data)
 - Dark / Light theme, 4K-friendly layout
 
 ### Phase 2
@@ -50,7 +50,7 @@ Purpose: compare *allocated* (Jira) against *actual available* capacity.
 - Forecasting (linear + seasonal, best/expected/worst, 1m/1q/1y/3y)
 - FinOps engine (chargeback/showback, budget-vs-actual)
 - Intelligent Alert Center (CPU/RAM/Storage thresholds, growth anomalies)
-- AMIN LLM synthesis layer (local Claude Code CLI)
+- AMIR LLM synthesis layer (local Claude Code CLI)
 - PDF / PPT report exports
 
 ### Phase 3

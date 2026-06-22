@@ -1,31 +1,39 @@
 import { useState } from 'react'
 import { Sparkles, Send } from 'lucide-react'
 import { api } from '@/lib/api'
+import { useI18n } from '@/lib/i18n'
 
-const EXAMPLES = [
-  'Executive summary',
-  'Top departments by RAM',
-  'Which department consumed most CPU this year?',
-  'Forecast CPU next year',
-  'Top departments',
-]
-
-export function AminPage() {
+export function AmirPage() {
+  const { t, lang } = useI18n()
   const [q, setQ] = useState('')
   const [thread, setThread] = useState<{ role: string; text: string; data?: any }[]>([])
   const [busy, setBusy] = useState(false)
 
+  // Examples in the active UI language.
+  const EXAMPLES: Record<string, string[]> = {
+    en: ['Executive summary', 'Top departments by RAM',
+         'Which department consumed most CPU this year?',
+         'Forecast CPU next year', 'Top departments'],
+    ru: ['Сводка по компании', 'Топ подразделений по RAM',
+         'Какое подразделение использовало больше всего CPU в 2026?',
+         'Прогноз CPU на следующий год', 'Топ подразделений'],
+    uz: ['Sarhisob', 'RAM boʻyicha eng faol boʻlimlar',
+         'Qaysi boʻlim eng koʻp CPU sarfladi?',
+         'Keyingi yilga CPU prognozi', 'Eng faol boʻlimlar'],
+  }
+  const examples = EXAMPLES[lang] || EXAMPLES.en
+
   const ask = async (text?: string) => {
     const query = (text ?? q).trim()
     if (!query) return
-    setThread((t) => [...t, { role: 'user', text: query }])
+    setThread((tr) => [...tr, { role: 'user', text: query }])
     setQ('')
     setBusy(true)
     try {
-      const r = await api.amin(query)
-      setThread((t) => [...t, { role: 'amin', text: r.answer, data: r.data }])
+      const r = await api.amir(query)
+      setThread((tr) => [...tr, { role: 'amir', text: r.answer, data: r.data }])
     } catch (e: any) {
-      setThread((t) => [...t, { role: 'amin', text: `Error: ${e.message || e}` }])
+      setThread((tr) => [...tr, { role: 'amir', text: `Error: ${e.message || e}` }])
     } finally {
       setBusy(false)
     }
@@ -34,19 +42,18 @@ export function AminPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       <div className="flex items-center gap-3">
-        <div className="size-10 rounded-xl bg-gradient-to-br from-primary to-accent grid place-items-center text-white">
+        <div className="size-10 rounded-xl grid place-items-center text-white"
+          style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-soft) 100%)' }}>
           <Sparkles className="size-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">AMIN — IT Resource Copilot</h1>
-          <p className="text-sm text-muted-foreground">
-            Ask about departments, resources, trends, forecasts. Answers are grounded on the active dataset.
-          </p>
+          <h1 className="text-2xl font-semibold tracking-tight">{t('amir.title')}</h1>
+          <p className="text-sm text-muted-foreground">{t('amir.subtitle')}</p>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        {EXAMPLES.map((ex) => (
+        {examples.map((ex) => (
           <button key={ex} onClick={() => ask(ex)}
             className="text-xs px-3 py-1.5 rounded-full border border-border bg-card hover:bg-muted">
             {ex}
@@ -57,13 +64,13 @@ export function AminPage() {
       <div className="itrm-card p-5 space-y-3 min-h-[300px]">
         {thread.length === 0 && (
           <div className="text-sm text-muted-foreground">
-            Try an example above, or type your own question.
+            {t('amir.empty')}
           </div>
         )}
         {thread.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${
-              m.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-muted'
+              m.role === 'user' ? 'bg-[var(--primary)] text-[var(--primary-foreground)]' : 'bg-muted'
             }`}>
               {m.text}
               {m.data && Array.isArray(m.data) && (
@@ -79,17 +86,18 @@ export function AminPage() {
             </div>
           </div>
         ))}
-        {busy && <div className="text-xs text-muted-foreground">AMIN is thinking…</div>}
+        {busy && <div className="text-xs text-muted-foreground">{t('amir.thinking')}</div>}
       </div>
 
       <div className="flex gap-2">
         <input value={q} onChange={(e) => setQ(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && ask()}
-          placeholder="Ask AMIN…"
+          placeholder={t('amir.placeholder')}
           className="flex-1 h-11 rounded-xl border border-border bg-card px-4 text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
         <button onClick={() => ask()} disabled={busy}
-          className="h-11 px-4 rounded-xl bg-primary text-primary-foreground font-medium flex items-center gap-2">
-          <Send className="size-4" /> Send
+          className="h-11 px-4 rounded-xl text-white font-medium flex items-center gap-2"
+          style={{ background: 'linear-gradient(180deg, var(--primary) 0%, var(--primary-soft) 130%)' }}>
+          <Send className="size-4" /> {t('amir.send')}
         </button>
       </div>
     </div>

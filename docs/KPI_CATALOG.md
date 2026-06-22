@@ -135,10 +135,10 @@ K=KPI card, H=heatmap, T=table, G=gauge.
 | 99 | Low-utilization Resources | actual < 20% of allocated |
 | 100| Reclaimable Capacity | Σ resources flagged unused |
 | 101| Governance Violations | count of policy breaches |
-| 102| AMIN Queries / day | usage metric |
-| 103| AMIN Avg Response Time | latency |
-| 104| AMIN Fallback Rate | fraction answered without LLM |
-| 105| AMIN Top Intents | most-asked categories |
+| 102| AMIR Queries / day | usage metric |
+| 103| AMIR Avg Response Time | latency |
+| 104| AMIR Fallback Rate | fraction answered without LLM |
+| 105| AMIR Top Intents | most-asked categories |
 | 106| Data Coverage % | rows with non-null resource fields |
 | 107| Dept Coverage % | rows with non-blank department |
 | 108| Env Coverage % | rows with non-Unspecified env |

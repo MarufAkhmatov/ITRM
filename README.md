@@ -16,7 +16,7 @@ date serials, lookalike Cyrillic letters), and surfaces:
 - **Upload & ETL** — drag-and-drop, auto-format detection (.xls binary / .xlsx
   / .csv / html-disguised xls), live ingestion report, versioned uploads,
   one-click rollback.
-- **AMIN** — IT Resource Copilot. Natural-language questions ("top
+- **AMIR** — IT Resource Copilot. Natural-language questions ("top
   departments by RAM", "forecast CPU next year") routed to deterministic data
   tools that compute REAL numbers from the active dataset.
 - **Filters** — Year, Quarter, Month, Department, Environment, Request Type,
@@ -80,10 +80,10 @@ Normalization handles real-world dirt the source file actually has:
 ## Modules and roadmap
 
 - **MVP (this release)** — Ingestion, Executive, 9 request-type pages,
-  Departments, Filters, Upload, Settings, Exports, Theming, AMIN deterministic.
+  Departments, Filters, Upload, Settings, Exports, Theming, AMIR deterministic.
 - **Phase 2** — Capacity Registry & comparison, FinOps cost engine,
   Forecasting (linear + seasonal, best/expected/worst), Intelligent Alerts,
-  AMIN LLM synthesis via local Claude Code CLI.
+  AMIR LLM synthesis via local Claude Code CLI.
 - **Phase 3** — What-If Simulation, Infrastructure Digital Twin, Resource
   Governance (zombie / aging / reclamation), CIO Command Center, Project
   Analytics, Executive Report Generator, full EDW dimensional model.
@@ -108,5 +108,5 @@ See `backend/main.py`. Key endpoints:
 | GET    | `/api/kpis/executive`             | Executive dashboard payload          |
 | GET    | `/api/kpis/request-type/{code}`   | Per-type dashboard                   |
 | GET    | `/api/kpis/departments`           | Department analytics + heatmap       |
-| POST   | `/api/amin/query`                 | AMIN copilot NL query                |
+| POST   | `/api/amir/query`                 | AMIR copilot NL query                |
 | GET    | `/api/export/{xlsx\|csv\|json}`   | Filtered export                      |

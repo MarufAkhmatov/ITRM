@@ -37,8 +37,8 @@ export const api = {
   departments: (f?: Filters) => j(`/api/kpis/departments${qs(f)}`),
   requests: (f?: Filters & { limit?: number; offset?: number }) =>
     j(`/api/requests${qs(f as Filters)}`),
-  amin: (query: string) =>
-    j('/api/amin/query', {
+  amir: (query: string) =>
+    j('/api/amir/query', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ query }),

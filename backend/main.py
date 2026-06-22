@@ -10,7 +10,7 @@ from .ingest.pipeline import ingest_bytes
 from .storage import file_store as store
 from .analytics import kpis as K
 from .analytics.filters import apply_filters, distinct_values
-from .amin.amin import answer as amin_answer
+from .amir.amir import answer as amir_answer
 
 app = FastAPI(title="ITRM API", version="0.1.0")
 app.add_middleware(
@@ -154,11 +154,17 @@ def put_cost(rates: dict):
     return rates
 
 
-# --- AMIN ------------------------------------------------------------------
-@app.post("/api/amin/query")
-def amin_query(payload: dict):
+# --- AMIR ------------------------------------------------------------------
+@app.post("/api/amir/query")
+def amir_query(payload: dict):
     q = (payload or {}).get("query", "")
-    return amin_answer(_active(), q)
+    return amir_answer(_active(), q)
+
+
+# Backwards-compatible alias for older /api/amin clients.
+@app.post("/api/amin/query")
+def amin_query_alias(payload: dict):
+    return amir_query(payload)
 
 
 # --- exports ---------------------------------------------------------------

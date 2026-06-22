@@ -96,7 +96,7 @@ export function Sidebar() {
         )}
         <Item to="/upload" icon={Upload} label={t('nav.upload')} />
         <Item to="/settings" icon={Settings} label={t('nav.settings')} />
-        <Item to="/amin" icon={Sparkles} label={t('nav.amin')} />
+        <Item to="/amir" icon={Sparkles} label={t('nav.amir')} />
       </nav>
 
       {collapsed && (

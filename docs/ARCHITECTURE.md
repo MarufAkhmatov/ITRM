@@ -8,11 +8,11 @@
 │   Tailwind 4 · Recharts  │ ◄──────────────────│   Python 3.14              │
 │   Sidebar / FilterBar    │                    │                            │
 │   KPI cards · Heatmaps   │                    │   ingest/  (reader,        │
-│   AMIN panel             │                    │     normalize, mappings,   │
+│   AMIR panel             │                    │     normalize, mappings,   │
 └──────────────────────────┘                    │     pipeline)              │
                                                 │   analytics/ (kpis,        │
                                                 │     departments, filters)  │
-                                                │   amin/ (intent router)    │
+                                                │   amir/ (intent router)    │
                                                 │   storage/ (file_store)    │
                                                 └─────────────┬──────────────┘
                                                               │
@@ -46,7 +46,7 @@
 4. **Cyrillic-safe folding** — full Russian → ASCII transliteration so
    mapping dictionaries collapse status `"Dоne"` (Cyrillic `о`), `"Готово"`,
    `"Финуправление"` vs `"Финансовое управление"`, etc.
-5. **AMIN computes numbers in code, NL synthesis is optional** — the
+5. **AMIR computes numbers in code, NL synthesis is optional** — the
    deterministic intent router always returns real metrics. The local
    Claude Code CLI synthesis is a Phase 2 toggle that *phrases* those
    numbers; it never sources them.
@@ -64,8 +64,8 @@ backend/
   analytics/
     filters.py                  shared filter logic + distinct values
     kpis.py                     executive / per-type / departments
-  amin/
-    amin.py                     intent router + data tools
+  amir/
+    amir.py                     intent router + data tools
   storage/
     file_store.py               active/archive + capacity / costs / mappings
   requirements.txt
@@ -73,10 +73,10 @@ backend/
 src/
   main.tsx, App.tsx
   components/
-    layout/    Sidebar, Topbar, FilterBar, AminPanel
+    layout/    Sidebar, Topbar, FilterBar, AmirPanel
     charts/    KpiCard, Charts (Area, Bar, Pie, Heatmap, Sparkline)
   pages/
-    Executive, RequestType, Departments, Upload, Settings, Capacity, Amin
+    Executive, RequestType, Departments, Upload, Settings, Capacity, Amir
   lib/         api client, filters store, format helpers, cn
 
 docs/          PRD, KPI_CATALOG, DATA_DICTIONARY, ARCHITECTURE
@@ -98,5 +98,5 @@ See `backend/main.py`. Key ones:
 | GET    | `/api/kpis/departments`           | Department analytics + heatmap       |
 | GET/PUT| `/api/capacity`                   | Capacity Registry                    |
 | GET/PUT| `/api/cost-rates`                 | FinOps unit rates                    |
-| POST   | `/api/amin/query`                 | AMIN copilot                         |
+| POST   | `/api/amir/query`                 | AMIR copilot                         |
 | GET    | `/api/export/{xlsx\|csv\|json}`   | Filtered export                      |
