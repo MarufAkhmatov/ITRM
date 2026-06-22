@@ -9,8 +9,10 @@ export default defineConfig({
     alias: { '@': path.resolve(__dirname, './src') },
   },
   server: {
-    host: true,
+    host: '0.0.0.0',          // listen on every interface so a phone on the
+                              // same Wi-Fi can reach this dev server directly
     port: Number(process.env.PORT) || 5173,
+    strictPort: false,
     proxy: {
       '/api': {
         target: process.env.VITE_API_URL || 'http://127.0.0.1:8077',
