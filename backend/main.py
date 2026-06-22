@@ -1,6 +1,9 @@
 """ITRM FastAPI backend."""
 from __future__ import annotations
 import io
+import os
+import secrets
+import socket
 
 from fastapi import FastAPI, UploadFile, File, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
@@ -40,6 +43,62 @@ def health():
     rs, rp = store.get_active()
     return {"status": "ok", "records": len(rs),
             "active_upload": rp.get("filename") if rp else None}
+
+
+# --- auth (single admin user, configurable via env) -----------------------
+# Default credentials per product spec: admin / Admin2026.
+# Override with env vars ITRM_ADMIN_USER / ITRM_ADMIN_PASSWORD for production.
+_ADMIN_USER = os.environ.get("ITRM_ADMIN_USER", "admin")
+_ADMIN_PASS = os.environ.get("ITRM_ADMIN_PASSWORD", "Admin2026")
+_TOKENS: set[str] = set()
+
+
+@app.post("/api/auth/login")
+def login(payload: dict):
+    u = (payload or {}).get("username", "")
+    p = (payload or {}).get("password", "")
+    if u == _ADMIN_USER and p == _ADMIN_PASS:
+        token = secrets.token_urlsafe(24)
+        _TOKENS.add(token)
+        return {"ok": True, "token": token,
+                "user": {"username": u, "role": "Admin"}}
+    raise HTTPException(401, "Invalid credentials")
+
+
+@app.post("/api/auth/logout")
+def logout(payload: dict | None = None):
+    token = (payload or {}).get("token")
+    if token:
+        _TOKENS.discard(token)
+    return {"ok": True}
+
+
+def _pick_lan_ip() -> str:
+    """Best-effort: a non-loopback IPv4 that the local network can reach."""
+    try:
+        # The UDP trick — no actual packet sent, but the kernel picks an
+        # interface IP that would be used to reach a public address.
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("10.255.255.255", 1))
+        ip = s.getsockname()[0]
+        s.close()
+        if ip and not ip.startswith("127."):
+            return ip
+    except Exception:
+        pass
+    try:
+        for ip in socket.gethostbyname_ex(socket.gethostname())[2]:
+            if not ip.startswith("127.") and not ip.startswith("169.254."):
+                return ip
+    except Exception:
+        pass
+    return "127.0.0.1"
+
+
+@app.get("/api/lan-info")
+def lan_info():
+    ip = _pick_lan_ip()
+    return {"ip": ip, "url": f"http://{ip}:5173"}
 
 
 # --- uploads --------------------------------------------------------------

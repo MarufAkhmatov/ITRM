@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { useState, ReactNode } from 'react'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { Menu, X } from 'lucide-react'
 import { FilterProvider } from '@/lib/filters'
 import { SidebarProvider } from '@/lib/sidebar'
+import { AuthProvider, useAuth } from '@/lib/auth'
 import { useI18n } from '@/lib/i18n'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Topbar } from '@/components/layout/Topbar'
@@ -16,22 +17,28 @@ import { UploadPage } from '@/pages/Upload'
 import { SettingsPage } from '@/pages/Settings'
 import { AmirPage } from '@/pages/Amir'
 import { CapacityPage } from '@/pages/Capacity'
+import { LoginPage } from '@/pages/Login'
 
-export default function App() {
+function RequireAuth({ children }: { children: ReactNode }) {
+  const { user } = useAuth()
+  const loc = useLocation()
+  if (!user) return <Navigate to="/login" state={{ from: loc }} replace />
+  return <>{children}</>
+}
+
+function Shell() {
   const [drawer, setDrawer] = useState(false)
-  useI18n() // touch so the dictionary is loaded before children render
+  useI18n()
   return (
     <SidebarProvider>
       <FilterProvider>
         <div className="flex min-h-screen relative">
-          {/* mobile drawer trigger */}
           <button
             onClick={() => setDrawer(true)}
             className="md:hidden fixed top-3 left-3 z-40 size-10 grid place-items-center rounded-xl glass">
             <Menu className="size-5" />
           </button>
 
-          {/* sidebar — drawer on mobile, normal on md+ */}
           <div className={`fixed md:static inset-y-0 left-0 z-50 transform transition-transform duration-200
             ${drawer ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}`}>
             <Sidebar />
@@ -57,7 +64,7 @@ export default function App() {
                 <Route path="/upload" element={<UploadPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
                 <Route path="/amir" element={<AmirPage />} />
-              <Route path="/amin" element={<AmirPage />} />
+                <Route path="/amin" element={<AmirPage />} />
                 <Route path="*" element={<Navigate to="/" replace />} />
               </Routes>
             </main>
@@ -66,5 +73,16 @@ export default function App() {
         </div>
       </FilterProvider>
     </SidebarProvider>
+  )
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/*" element={<RequireAuth><Shell /></RequireAuth>} />
+      </Routes>
+    </AuthProvider>
   )
 }

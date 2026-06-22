@@ -1,9 +1,10 @@
 import { useTheme } from 'next-themes'
-import { Moon, Sun, Download, RefreshCw, Languages, PanelLeft, PanelLeftClose } from 'lucide-react'
+import { Moon, Sun, Download, RefreshCw, Languages, PanelLeft, PanelLeftClose, LogOut } from 'lucide-react'
 import { api } from '@/lib/api'
 import { useFilters } from '@/lib/filters'
 import { useI18n, Lang } from '@/lib/i18n'
 import { useSidebar } from '@/lib/sidebar'
+import { useAuth } from '@/lib/auth'
 
 const LANGS: { code: Lang; label: string }[] = [
   { code: 'en', label: 'EN' },
@@ -16,6 +17,7 @@ export function Topbar() {
   const { filters, refreshOptions } = useFilters()
   const { lang, setLang, t } = useI18n()
   const { collapsed, toggle } = useSidebar()
+  const { user, logout } = useAuth()
 
   return (
     <header className="h-14 px-4 sm:px-5 flex items-center gap-3 sticky top-0 z-30 glass border-b border-[var(--glass-border)]">
@@ -65,6 +67,15 @@ export function Topbar() {
           title={t('topbar.toggle_theme')}>
           {resolvedTheme === 'dark' ? <Sun className="size-4" /> : <Moon className="size-4" />}
         </button>
+        {user && (
+          <button
+            onClick={logout}
+            title={`${t('topbar.logout')} (${user.username})`}
+            className="h-9 px-3 rounded-xl items-center gap-2 text-sm flex border border-[var(--glass-border)] glass-soft hover:bg-white/40 dark:hover:bg-white/5 text-[color:var(--soft)]">
+            <LogOut className="size-4" />
+            <span className="hidden lg:inline">{t('topbar.logout')}</span>
+          </button>
+        )}
       </div>
     </header>
   )
