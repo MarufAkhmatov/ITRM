@@ -22,9 +22,10 @@ export function hours(n: number | null | undefined) {
   return `${(n / (24 * 30)).toFixed(1)} mo`
 }
 
+// Chart palette aligned with the ITSM-SLA brand:
+// primary green → teal → purple → amber → red → deep teal → magenta → yellow
 export const CHART_COLORS = [
-  'hsl(217 91% 60%)', 'hsl(199 89% 48%)', 'hsl(142 71% 45%)',
-  'hsl(38 92% 50%)',  'hsl(0 84% 60%)',   'hsl(262 83% 58%)',
-  'hsl(176 70% 45%)', 'hsl(24 95% 53%)',  'hsl(305 70% 55%)',
-  'hsl(190 80% 50%)', 'hsl(50 85% 50%)',  'hsl(120 50% 50%)',
+  '#2d7a5f', '#4EB6A6', '#8b5cf6', '#d97706', '#e53e3e',
+  '#0c5563', '#b85ad1', '#f59e0b', '#38bdf8', '#84cc16',
+  '#f472b6', '#a3e635',
 ]

@@ -22,24 +22,24 @@ export function DepartmentsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">Top by Requests</h3>
           <HBar data={d.rows.slice(0, 10).map((r: any) => ({ name: r.department, value: r.requests }))} />
         </div>
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">Top by RAM (GB)</h3>
           <HBar data={[...d.rows].sort((a, b) => b.ram_gb - a.ram_gb).slice(0, 10)
             .map((r: any) => ({ name: r.department, value: r.ram_gb }))} />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+      <div className="itrm-card p-5">
         <h3 className="font-semibold mb-3">Department × Month Heatmap (top 15 departments)</h3>
         <Heatmap rows={d.top_departments} cols={d.months} data={d.heatmap}
           rowKey="department" colKey="month" valueKey="value" />
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5 overflow-x-auto">
+      <div className="itrm-card p-5 overflow-x-auto">
         <h3 className="font-semibold mb-3">All Departments</h3>
         <table className="w-full text-xs">
           <thead className="text-muted-foreground">

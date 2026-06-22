@@ -62,7 +62,7 @@ export function UploadPage() {
       </div>
 
       {report && (
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h2 className="font-semibold mb-3 flex items-center gap-2"><CheckCircle2 className="size-4 text-success" /> Ingestion Report</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
             <Stat label="Format" v={report.format} />
@@ -93,7 +93,7 @@ export function UploadPage() {
         </div>
       )}
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+      <div className="itrm-card p-5">
         <h2 className="font-semibold mb-3 flex items-center gap-2"><History className="size-4" /> Upload History</h2>
         {history.length === 0 && <div className="text-sm text-muted-foreground">No uploads yet.</div>}
         <table className="w-full text-sm">

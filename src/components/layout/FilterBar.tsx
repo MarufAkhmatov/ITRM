@@ -29,7 +29,7 @@ export function FilterBar() {
   const active = Object.values(filters).filter((v) => v !== undefined && v !== '').length
 
   return (
-    <div className="border-b border-border bg-card/40 glass px-3 sm:px-5 py-3">
+    <div className="glass border-b border-[var(--glass-border)] px-3 sm:px-5 py-3">
       <div className="flex items-center gap-2 md:hidden mb-2">
         <button onClick={() => setOpen(!open)}
           className="h-9 px-3 rounded-lg border border-border bg-card text-sm flex items-center gap-2">

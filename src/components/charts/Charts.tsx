@@ -4,8 +4,8 @@ import {
 } from 'recharts'
 import { CHART_COLORS } from '@/lib/format'
 
-const grid = 'hsl(var(--border))'
-const tickStyle = { fill: 'hsl(var(--muted-foreground))', fontSize: 11 }
+const grid = 'var(--border)'
+const tickStyle = { fill: 'var(--muted-foreground)', fontSize: 11 }
 
 export function SparkArea({ data, dataKey, color }: { data: any[]; dataKey: string; color?: string }) {
   return (
@@ -32,7 +32,7 @@ export function TrendArea({ data, keys, height = 320 }:
         <CartesianGrid stroke={grid} strokeDasharray="3 3" />
         <XAxis dataKey="month" tick={tickStyle} />
         <YAxis tick={tickStyle} />
-        <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: `1px solid ${grid}`, borderRadius: 12 }} />
+        <Tooltip contentStyle={{ background: 'var(--popover)', border: `1px solid ${grid}`, borderRadius: 12 }} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
         {keys.map((k, i) => (
           <Area key={k.key} type="monotone" dataKey={k.key} name={k.name}
@@ -53,7 +53,7 @@ export function HBar({ data, dataKey = 'value', nameKey = 'name', height = 280 }
         <CartesianGrid stroke={grid} strokeDasharray="3 3" horizontal={false} />
         <XAxis type="number" tick={tickStyle} />
         <YAxis type="category" dataKey={nameKey} tick={tickStyle} width={120} />
-        <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: `1px solid ${grid}`, borderRadius: 12 }} />
+        <Tooltip contentStyle={{ background: 'var(--popover)', border: `1px solid ${grid}`, borderRadius: 12 }} />
         <Bar dataKey={dataKey} radius={[0, 6, 6, 0]}>
           {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
         </Bar>
@@ -69,7 +69,7 @@ export function Donut({ data, height = 240 }: { data: any[]; height?: number }) 
         <Pie data={data} dataKey="value" nameKey="name" innerRadius="55%" outerRadius="85%" paddingAngle={2}>
           {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
         </Pie>
-        <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: `1px solid ${grid}`, borderRadius: 12 }} />
+        <Tooltip contentStyle={{ background: 'var(--popover)', border: `1px solid ${grid}`, borderRadius: 12 }} />
         <Legend wrapperStyle={{ fontSize: 11 }} />
       </PieChart>
     </ResponsiveContainer>
@@ -84,7 +84,7 @@ export function VBar({ data, dataKey = 'value', nameKey = 'name', height = 280 }
         <CartesianGrid stroke={grid} strokeDasharray="3 3" />
         <XAxis dataKey={nameKey} tick={tickStyle} angle={-15} textAnchor="end" interval={0} height={60} />
         <YAxis tick={tickStyle} />
-        <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: `1px solid ${grid}`, borderRadius: 12 }} />
+        <Tooltip contentStyle={{ background: 'var(--popover)', border: `1px solid ${grid}`, borderRadius: 12 }} />
         <Bar dataKey={dataKey} radius={[8, 8, 0, 0]}>
           {data.map((_, i) => <Cell key={i} fill={CHART_COLORS[i % CHART_COLORS.length]} />)}
         </Bar>
@@ -101,7 +101,7 @@ export function LineSeries({ data, keys, height = 280 }:
         <CartesianGrid stroke={grid} strokeDasharray="3 3" />
         <XAxis dataKey="month" tick={tickStyle} />
         <YAxis tick={tickStyle} />
-        <Tooltip contentStyle={{ background: 'hsl(var(--card))', border: `1px solid ${grid}`, borderRadius: 12 }} />
+        <Tooltip contentStyle={{ background: 'var(--popover)', border: `1px solid ${grid}`, borderRadius: 12 }} />
         <Legend wrapperStyle={{ fontSize: 12 }} />
         {keys.map((k, i) => (
           <Line key={k.key} type="monotone" dataKey={k.key} name={k.name}
@@ -140,7 +140,7 @@ export function Heatmap({ rows, cols, data, valueKey = 'value', rowKey, colKey, 
                 return (
                   <td key={c} className="text-center rounded"
                       style={{
-                        background: `hsl(217 91% 60% / ${0.08 + 0.7 * a})`,
+                        background: `color-mix(in oklab, var(--primary) ${Math.round(8 + 70 * a)}%, transparent)`,
                         color: a > 0.5 ? 'white' : 'inherit',
                         minWidth: 36, padding: '6px 4px',
                       }} title={`${r} · ${c}: ${v}`}>

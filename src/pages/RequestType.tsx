@@ -47,32 +47,32 @@ export function RequestTypePage() {
           } />
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+      <div className="itrm-card p-5">
         <h2 className="font-semibold mb-3">Monthly Volume</h2>
         <TrendArea data={d.trend} keys={[{ key: 'requests', name: 'Requests' }]} height={260} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">By Status</h3>
           <Donut data={d.by_status} />
         </div>
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">By Environment</h3>
           <Donut data={d.by_environment} />
         </div>
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">By Priority</h3>
           <Donut data={d.by_priority} />
         </div>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+      <div className="itrm-card p-5">
         <h3 className="font-semibold mb-3">Top Departments</h3>
         <HBar data={d.top_departments} />
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5 overflow-x-auto">
+      <div className="itrm-card p-5 overflow-x-auto">
         <h3 className="font-semibold mb-3">Requests ({d.rows.length})</h3>
         <table className="w-full text-xs">
           <thead className="text-muted-foreground">

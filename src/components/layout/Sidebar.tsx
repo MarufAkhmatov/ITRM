@@ -2,10 +2,11 @@ import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, Building2, Server, ServerCog, Globe, Globe2,
   KeyRound, Boxes, Trash2, DatabaseBackup, HelpCircle, Upload,
-  Settings, Sparkles, Activity,
+  Settings, Sparkles, Activity, PanelLeftClose, PanelLeft,
 } from 'lucide-react'
 import { useFilters } from '@/lib/filters'
 import { useI18n } from '@/lib/i18n'
+import { useSidebar } from '@/lib/sidebar'
 import { cn } from '@/lib/cn'
 
 const TYPE_ICON: Record<string, any> = {
@@ -18,58 +19,94 @@ const TYPE_ICON: Record<string, any> = {
 export function Sidebar() {
   const { options } = useFilters()
   const { t } = useI18n()
-  const item = (active: boolean) =>
-    cn('flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-       active
-         ? 'bg-primary/15 text-primary font-medium'
-         : 'text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-white/5')
+  const { collapsed, toggle } = useSidebar()
+
+  const Item = ({ to, end, icon: Icon, label }: { to: string; end?: boolean; icon: any; label: string }) => (
+    <NavLink
+      to={to}
+      end={end}
+      title={collapsed ? label : undefined}
+      className={({ isActive }) =>
+        cn(
+          'flex items-center rounded-xl transition-all relative',
+          collapsed ? 'justify-center h-10 w-10 mx-auto' : 'gap-3 px-3 h-10',
+          isActive
+            // active chip — green tint + teal icon (color inherited by Icon)
+            ? 'bg-[var(--active-bg)] text-[color:var(--active-text)] shadow-[var(--active-glow)] [&_svg]:text-[color:var(--active-icon)]'
+            : 'text-[color:var(--sidebar-foreground)]/75 hover:bg-white/40 dark:hover:bg-white/5 hover:text-[color:var(--sidebar-foreground)]'
+        )
+      }>
+      <Icon className="size-[18px] shrink-0" />
+      {!collapsed && <span className="truncate text-sm">{label}</span>}
+    </NavLink>
+  )
 
   return (
-    <aside className="w-64 shrink-0 border-r border-border bg-sidebar text-sidebar-foreground overflow-y-auto scrollbar-thin">
-      <div className="p-5 flex items-center gap-2">
-        <div className="size-9 rounded-xl bg-gradient-to-br from-primary to-accent grid place-items-center text-white font-bold">I</div>
-        <div>
-          <div className="font-semibold tracking-tight">ITRM</div>
-          <div className="text-[11px] uppercase tracking-wider text-sidebar-foreground/50">Resource Mgmt</div>
-        </div>
+    <aside
+      className={cn(
+        'shrink-0 transition-[width] duration-200 h-full overflow-hidden flex flex-col',
+        'bg-[var(--sidebar)] glass border-r border-[var(--glass-border)]',
+        collapsed ? 'w-[68px]' : 'w-64'
+      )}
+    >
+      <div className={cn('flex items-center gap-2 p-3 border-b border-[var(--glass-border)]', collapsed && 'justify-center')}>
+        <div className="size-9 rounded-xl bg-gradient-to-br from-[var(--primary)] to-[var(--primary-soft)] grid place-items-center text-white font-semibold shrink-0">I</div>
+        {!collapsed && (
+          <div className="min-w-0">
+            <div className="font-semibold tracking-tight leading-none">ITRM</div>
+            <div className="text-[10px] uppercase tracking-wider text-[color:var(--sidebar-muted)] mt-1">Resource Mgmt</div>
+          </div>
+        )}
+        {!collapsed && (
+          <button
+            onClick={toggle}
+            className="ml-auto size-8 grid place-items-center rounded-lg hover:bg-white/40 dark:hover:bg-white/5 text-[color:var(--sidebar-muted)]"
+            title="Collapse">
+            <PanelLeftClose className="size-4" />
+          </button>
+        )}
       </div>
 
-      <nav className="px-3 pb-4 space-y-1">
-        <div className="px-2 pt-3 pb-1 text-[10px] uppercase tracking-wider text-sidebar-foreground/40">{t('sidebar.overview')}</div>
-        <NavLink to="/" end className={({ isActive }) => item(isActive)}>
-          <LayoutDashboard className="size-4" /> {t('nav.executive')}
-        </NavLink>
-        <NavLink to="/departments" className={({ isActive }) => item(isActive)}>
-          <Building2 className="size-4" /> {t('nav.departments')}
-        </NavLink>
-        <NavLink to="/capacity" className={({ isActive }) => item(isActive)}>
-          <Activity className="size-4" /> {t('nav.capacity')}
-        </NavLink>
-
-        <div className="px-2 pt-5 pb-1 text-[10px] uppercase tracking-wider text-sidebar-foreground/40">{t('sidebar.request_types')}</div>
-        {options.request_types.length === 0 && (
-          <div className="px-3 py-2 text-xs text-sidebar-foreground/40">Upload data to populate</div>
+      <nav className="flex-1 overflow-y-auto pn-scroll px-2 py-3 space-y-1">
+        {!collapsed && (
+          <div className="px-3 pt-1 pb-1 text-[10px] uppercase tracking-wider text-[color:var(--sidebar-muted)]">
+            {t('sidebar.overview')}
+          </div>
         )}
-        {options.request_types.map((rt) => {
-          const Icon = TYPE_ICON[rt.code] || HelpCircle
-          return (
-            <NavLink key={rt.code} to={`/request-type/${rt.code}`} className={({ isActive }) => item(isActive)}>
-              <Icon className="size-4" /> <span className="truncate">{rt.label}</span>
-            </NavLink>
-          )
-        })}
+        <Item to="/" end icon={LayoutDashboard} label={t('nav.executive')} />
+        <Item to="/departments" icon={Building2} label={t('nav.departments')} />
+        <Item to="/capacity" icon={Activity} label={t('nav.capacity')} />
 
-        <div className="px-2 pt-5 pb-1 text-[10px] uppercase tracking-wider text-sidebar-foreground/40">{t('sidebar.admin')}</div>
-        <NavLink to="/upload" className={({ isActive }) => item(isActive)}>
-          <Upload className="size-4" /> {t('nav.upload')}
-        </NavLink>
-        <NavLink to="/settings" className={({ isActive }) => item(isActive)}>
-          <Settings className="size-4" /> {t('nav.settings')}
-        </NavLink>
-        <NavLink to="/amin" className={({ isActive }) => item(isActive)}>
-          <Sparkles className="size-4" /> {t('nav.amin')}
-        </NavLink>
+        {!collapsed && (
+          <div className="px-3 pt-4 pb-1 text-[10px] uppercase tracking-wider text-[color:var(--sidebar-muted)]">
+            {t('sidebar.request_types')}
+          </div>
+        )}
+        {options.request_types.length === 0 && !collapsed && (
+          <div className="px-3 py-2 text-xs text-[color:var(--sidebar-muted)]">Upload data to populate</div>
+        )}
+        {options.request_types.map((rt) => (
+          <Item key={rt.code} to={`/request-type/${rt.code}`} icon={TYPE_ICON[rt.code] || HelpCircle} label={rt.label} />
+        ))}
+
+        {!collapsed && (
+          <div className="px-3 pt-4 pb-1 text-[10px] uppercase tracking-wider text-[color:var(--sidebar-muted)]">
+            {t('sidebar.admin')}
+          </div>
+        )}
+        <Item to="/upload" icon={Upload} label={t('nav.upload')} />
+        <Item to="/settings" icon={Settings} label={t('nav.settings')} />
+        <Item to="/amin" icon={Sparkles} label={t('nav.amin')} />
       </nav>
+
+      {collapsed && (
+        <button
+          onClick={toggle}
+          className="m-3 size-10 grid place-items-center rounded-xl hover:bg-white/40 dark:hover:bg-white/5 text-[color:var(--sidebar-muted)]"
+          title="Expand">
+          <PanelLeft className="size-4" />
+        </button>
+      )}
     </aside>
   )
 }

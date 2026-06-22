@@ -62,7 +62,7 @@ export function ExecutivePage() {
           expanded={<TrendArea data={d.trend} keys={[{ key: 'storage', name: 'Storage GB' }]} />} />
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+      <div className="itrm-card p-5">
         <div className="flex items-baseline justify-between mb-3">
           <h2 className="font-semibold">{t('sec.trend')}</h2>
           <span className="text-xs text-muted-foreground">{t('sec.monthly')}</span>
@@ -76,26 +76,26 @@ export function ExecutivePage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2 flex items-center gap-2"><Building2 className="size-4" /> {t('sec.top_dept_req')}</h3>
           <HBar data={d.top_departments_by_requests} />
         </div>
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">{t('sec.by_env')}</h3>
           <Donut data={d.by_environment} />
         </div>
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">{t('sec.by_status')}</h3>
           <Donut data={d.by_status} />
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">{t('sec.top_dept_ram')}</h3>
           <HBar data={d.top_departments_by_ram} />
         </div>
-        <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+        <div className="itrm-card p-5">
           <h3 className="font-semibold mb-2">{t('sec.by_type')}</h3>
           <VBar data={d.by_request_type.map((r: any) => ({ name: r.label, value: r.value }))} />
         </div>

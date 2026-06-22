@@ -54,7 +54,7 @@ export function AminPage() {
         ))}
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5 space-y-3 min-h-[300px]">
+      <div className="itrm-card p-5 space-y-3 min-h-[300px]">
         {thread.length === 0 && (
           <div className="text-sm text-muted-foreground">
             Try an example above, or type your own question.

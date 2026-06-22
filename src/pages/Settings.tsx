@@ -23,7 +23,7 @@ export function SettingsPage() {
         <p className="text-sm text-muted-foreground">FinOps cost rates and admin configuration.</p>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5 space-y-4">
+      <div className="itrm-card p-5 space-y-4">
         <h2 className="font-semibold">FinOps unit rates (monthly, USD)</h2>
         <div className="grid grid-cols-3 gap-4">
           <Field label="CPU per vCPU / month" value={rates.cpu_per_vcpu_month}
@@ -46,7 +46,7 @@ export function SettingsPage() {
         </button>
       </div>
 
-      <div className="rounded-2xl border border-border bg-card/70 glass p-5">
+      <div className="itrm-card p-5">
         <h2 className="font-semibold">Field Mappings</h2>
         <p className="text-sm text-muted-foreground mt-2">
           Column auto-mapping and value normalization (status, department, request-type, environment, server-type)
