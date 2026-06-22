@@ -1,0 +1,26 @@
+node_modules/
+dist/
+.vite/
+.DS_Store
+*.log
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Runtime data
+storage/current/
+storage/archive/
+storage/uploads.json
+storage/capacity.json
+storage/cost_rates.json
+storage/mappings.json
+
+# IDE
+.idea/
+.vscode/
+
+# Keep sample data, ignore real exports
+data/incoming/

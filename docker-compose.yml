@@ -1,0 +1,46 @@
+version: "3.9"
+
+# ITRM — optional Docker stack. The default Windows run is direct
+# (python + npm). Use this when you want a Postgres-backed deployment.
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: itrm
+      POSTGRES_USER: itrm
+      POSTGRES_PASSWORD: itrm
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
+    ports:
+      - "5432:5432"
+
+  backend:
+    image: python:3.12-slim
+    working_dir: /app
+    command: bash -c "pip install -q -r backend/requirements.txt && uvicorn backend.main:app --host 0.0.0.0 --port 8077"
+    environment:
+      ITRM_STORAGE: /app/storage
+    volumes:
+      - .:/app
+    ports:
+      - "8077:8077"
+    depends_on:
+      - postgres
+
+  frontend:
+    image: node:20-alpine
+    working_dir: /app
+    command: sh -c "npm install --no-audit --no-fund && npm run dev -- --host 0.0.0.0"
+    environment:
+      VITE_API_URL: http://backend:8077
+    volumes:
+      - .:/app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
