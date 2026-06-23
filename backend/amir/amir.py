@@ -15,6 +15,7 @@ from collections import Counter, defaultdict
 from datetime import datetime
 
 from ..analytics.kpis import executive, departments_analytics
+from ..analytics.forecast import forecast_resources
 
 
 # ---------------------------------------------------------------------------
@@ -106,6 +107,22 @@ PHRASES = {
         "ru": "Топ подразделений по количеству запросов: ",
         "uz": "Soʻrovlar soni boʻyicha eng faol boʻlimlar: ",
     },
+    "forecast_horizon_rest_2026": {
+        "en": ("Forecast for the rest of 2026 (Jul-Dec): "
+               "CPU ~{cpu} vCPU, RAM ~{ram} GB, Storage ~{sto} GB (expected)."),
+        "ru": ("Прогноз до конца 2026 (июль-декабрь): "
+               "CPU ~{cpu} vCPU, RAM ~{ram} ГБ, Хранилище ~{sto} ГБ (ожидаемо)."),
+        "uz": ("2026 yil yakuniga qadar prognoz (iyul-dekabr): "
+               "CPU ~{cpu} vCPU, RAM ~{ram} GB, Xotira ~{sto} GB (kutilayotgan)."),
+    },
+    "forecast_horizon_y2027": {
+        "en": ("Forecast for 2027 (full year): "
+               "CPU ~{cpu} vCPU, RAM ~{ram} GB, Storage ~{sto} GB (expected)."),
+        "ru": ("Прогноз на 2027 год: "
+               "CPU ~{cpu} vCPU, RAM ~{ram} ГБ, Хранилище ~{sto} ГБ (ожидаемо)."),
+        "uz": ("2027 yil uchun prognoz: "
+               "CPU ~{cpu} vCPU, RAM ~{ram} GB, Xotira ~{sto} GB (kutilayotgan)."),
+    },
     "default": {
         "en": ("I'm AMIR. I see {total} requests in the active dataset "
                "({open} open, {closed} closed). Try: 'top departments by RAM', "
@@ -196,6 +213,28 @@ def _any(text, triggers):
     return any(tr in text for tr in triggers)
 
 
+# Phrase markers for "to the end of the current year". The actual gate is
+# "this phrase is present AND '2026' or no year is present".
+_END_MARKERS = (
+    "rest of", "end of", "until end", "yakuniga", "yakuniga qadar",
+    "до конца", "к концу",
+)
+# Phrase markers for 2027 / next year.
+_NEXT_YEAR_MARKERS = (
+    "next year", "следующий год", "следующего года",
+    "keyingi yil", "kelas yil",
+)
+
+
+def _detect_horizon(ql: str):
+    # 2027 takes precedence — it's explicit.
+    if "2027" in ql or any(t in ql for t in _NEXT_YEAR_MARKERS):
+        return "y2027"
+    if any(t in ql for t in _END_MARKERS) and ("2026" in ql or "year" not in ql):
+        return "rest_2026"
+    return None
+
+
 def answer(records, query: str):
     q = (query or "").strip()
     ql = q.lower()
@@ -206,6 +245,25 @@ def answer(records, query: str):
     filters = {}
     if year:
         filters["year"] = year
+
+    # Intent: forecast horizon (demo MVP — opens ForecastModal in the UI)
+    horizon = _detect_horizon(ql)
+    if horizon and ("forecast" in ql or "прогноз" in ql or "prognoz" in ql
+                    or "resource" in ql or "ресурс" in ql or "resurs" in ql):
+        payload = forecast_resources(records, horizon, lang=lang)
+        r = payload["resources"]
+        phrase_key = f"forecast_horizon_{horizon}"
+        ans = _p(phrase_key, lang,
+                 cpu=_fmt(r["cpu"]["total"]["expected"], 0),
+                 ram=_fmt(r["ram"]["total"]["expected"], 0),
+                 sto=_fmt(r["storage"]["total"]["expected"], 0))
+        return {
+            "intent": "forecast_horizon",
+            "horizon": horizon,
+            "answer": ans,
+            "data": payload,
+            "ui": {"open": "forecast_modal"},
+        }
 
     # Intent: top department by a resource
     if res and _any(ql, _TOP_TRIGGERS):

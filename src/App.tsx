@@ -4,6 +4,8 @@ import { Menu, X } from 'lucide-react'
 import { FilterProvider } from '@/lib/filters'
 import { SidebarProvider } from '@/lib/sidebar'
 import { AuthProvider, useAuth } from '@/lib/auth'
+import { ForecastProvider } from '@/lib/forecast'
+import { ForecastModal } from '@/components/charts/ForecastModal'
 import { useI18n } from '@/lib/i18n'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { Topbar } from '@/components/layout/Topbar'
@@ -30,6 +32,7 @@ function Shell() {
   const [drawer, setDrawer] = useState(false)
   useI18n()
   return (
+    <ForecastProvider>
     <SidebarProvider>
       <FilterProvider>
         <div className="flex min-h-screen relative">
@@ -70,9 +73,11 @@ function Shell() {
             </main>
           </div>
           <AmirPanel />
+          <ForecastModal />
         </div>
       </FilterProvider>
     </SidebarProvider>
+    </ForecastProvider>
   )
 }
 

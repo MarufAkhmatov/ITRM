@@ -1,24 +1,39 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Sparkles, X, Send } from 'lucide-react'
 import { api } from '@/lib/api'
 import { useI18n } from '@/lib/i18n'
+import { useForecast } from '@/lib/forecast'
+
+const DEMO_QUESTIONS = [
+  { key: 'amir.suggest.rest_2026', query: 'Forecast resource demand until end of 2026' },
+  { key: 'amir.suggest.y2027',     query: 'Forecast resource demand for 2027' },
+]
 
 export function AmirPanel() {
   const { t } = useI18n()
+  const { open: openForecast } = useForecast()
+  const nav = useNavigate()
   const [open, setOpen] = useState(false)
   const [q, setQ] = useState('')
   const [thread, setThread] = useState<{ role: string; text: string }[]>([])
   const [busy, setBusy] = useState(false)
 
-  const ask = async () => {
-    if (!q.trim()) return
-    const query = q.trim()
-    setThread((tr) => [...tr, { role: 'user', text: query }])
+  const ask = async (query: string, label?: string) => {
+    const text = (label ?? query).trim()
+    if (!query.trim()) return
+    setThread((tr) => [...tr, { role: 'user', text }])
     setQ('')
     setBusy(true)
     try {
       const r = await api.amir(query)
       setThread((tr) => [...tr, { role: 'amir', text: r.answer }])
+      if (r?.ui?.open === 'forecast_modal' && r?.data?.resources) {
+        if (window.location.pathname !== '/') nav('/')
+        openForecast(r.data)
+        // Auto-collapse the panel so the modal isn't hidden under it.
+        setOpen(false)
+      }
     } catch (e: any) {
       setThread((tr) => [...tr, { role: 'amir', text: `Error: ${e.message || e}` }])
     } finally {
@@ -47,11 +62,19 @@ export function AmirPanel() {
           <X className="size-4" />
         </button>
       </div>
+
+      <div className="p-3 border-b border-border flex flex-col gap-2">
+        {DEMO_QUESTIONS.map((d) => (
+          <button key={d.key} onClick={() => ask(d.query, t(d.key))} disabled={busy}
+            className="text-left text-xs px-3 py-2 rounded-lg border border-[var(--glass-border)] glass-soft hover:bg-[var(--active-chip)] hover:text-[color:var(--active-icon)] transition disabled:opacity-60">
+            {t(d.key)}
+          </button>
+        ))}
+      </div>
+
       <div className="flex-1 overflow-y-auto pn-scroll p-3 space-y-2">
         {thread.length === 0 && (
-          <div className="text-xs text-muted-foreground">
-            {t('amir.empty_panel')}
-          </div>
+          <div className="text-xs text-muted-foreground">{t('amir.empty_panel')}</div>
         )}
         {thread.map((m, i) => (
           <div key={i} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -64,10 +87,10 @@ export function AmirPanel() {
       </div>
       <div className="p-3 border-t border-border flex gap-2">
         <input value={q} onChange={(e) => setQ(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && ask()}
+          onKeyDown={(e) => e.key === 'Enter' && ask(q)}
           placeholder={t('amir.placeholder')}
           className="flex-1 h-9 rounded-lg border border-border bg-background px-3 text-sm" />
-        <button onClick={ask} disabled={busy}
+        <button onClick={() => ask(q)} disabled={busy}
           className="size-9 grid place-items-center rounded-lg text-white"
           style={{ background: 'linear-gradient(135deg, var(--primary) 0%, var(--primary-soft) 100%)' }}>
           <Send className="size-4" />
