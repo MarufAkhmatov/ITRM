@@ -158,45 +158,47 @@ function MiniTable({ rows, cols }: { rows: any[]; cols: { key: string; label: st
 
 function TotalDetail({ d }: { d: any }) {
   const s = d.summary
+  const { t } = useI18n()
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <Panel title="Monthly volume" full>
-        <TrendArea data={d.trend} height={240} keys={[{ key: 'requests', name: 'Requests', color: CHART_COLORS[0] }]} />
+      <Panel title={t('dd.monthly_volume')} full>
+        <TrendArea data={d.trend} height={240} keys={[{ key: 'requests', name: t('rt.requests'), color: CHART_COLORS[0] }]} />
       </Panel>
-      <Panel title={`Fulfillment / Rejection / Open`}>
+      <Panel title={`${t('dd.fulfilled')} / ${t('dd.rejected')} / ${t('dd.open')}`}>
         <ul className="text-sm space-y-1.5">
-          <li className="flex justify-between"><span>Fulfilled</span><span className="font-mono">{fmt(s.fulfilled_requests)} ({pct(s.fulfillment_rate)})</span></li>
-          <li className="flex justify-between"><span>Rejected</span><span className="font-mono">{fmt(s.rejected_requests)} ({pct(s.rejection_rate)})</span></li>
-          <li className="flex justify-between"><span>Open</span><span className="font-mono">{fmt(s.open_requests)}</span></li>
-          <li className="flex justify-between"><span>Closed</span><span className="font-mono">{fmt(s.closed_requests)}</span></li>
+          <li className="flex justify-between"><span>{t('dd.fulfilled')}</span><span className="font-mono">{fmt(s.fulfilled_requests)} ({pct(s.fulfillment_rate)})</span></li>
+          <li className="flex justify-between"><span>{t('dd.rejected')}</span><span className="font-mono">{fmt(s.rejected_requests)} ({pct(s.rejection_rate)})</span></li>
+          <li className="flex justify-between"><span>{t('dd.open')}</span><span className="font-mono">{fmt(s.open_requests)}</span></li>
+          <li className="flex justify-between"><span>{t('dd.closed')}</span><span className="font-mono">{fmt(s.closed_requests)}</span></li>
         </ul>
       </Panel>
-      <Panel title="By request type">
+      <Panel title={t('dd.by_type')}>
         <Donut data={d.by_request_type.map((r: any) => ({ name: r.label, value: r.value }))} height={200} />
       </Panel>
-      <Panel title="By environment">
+      <Panel title={t('dd.by_env')}>
         <Donut data={d.by_environment} height={200} />
       </Panel>
-      <Panel title="Top departments" full>
+      <Panel title={t('dd.top_depts')} full>
         <HBar data={d.top_departments_by_requests} height={260} />
       </Panel>
     </div>
   )
 }
 
-function StatusDetail({ d, groupFilter }: { d: any; groupFilter: 'open' | 'closed' | 'rejected' }) {
+function StatusDetail({ d }: { d: any; groupFilter: 'open' | 'closed' | 'rejected' }) {
+  const { t } = useI18n()
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <Panel title="Status breakdown">
+      <Panel title={t('dd.status_breakdown')}>
         <Donut data={d.by_status} height={240} />
       </Panel>
-      <Panel title={`By environment (${groupFilter})`}>
+      <Panel title={t('dd.by_env')}>
         <Donut data={d.by_environment} height={240} />
       </Panel>
-      <Panel title="Monthly volume" full>
-        <TrendArea data={d.trend} height={240} keys={[{ key: 'requests', name: 'Requests', color: CHART_COLORS[3] }]} />
+      <Panel title={t('dd.monthly_volume')} full>
+        <TrendArea data={d.trend} height={240} keys={[{ key: 'requests', name: t('rt.requests'), color: CHART_COLORS[3] }]} />
       </Panel>
-      <Panel title="Top departments (requests)" full>
+      <Panel title={t('dd.top_depts_req')} full>
         <HBar data={d.top_departments_by_requests.slice(0, 10)} height={280} />
       </Panel>
     </div>
@@ -205,25 +207,26 @@ function StatusDetail({ d, groupFilter }: { d: any; groupFilter: 'open' | 'close
 
 function ClosedDetail({ d }: { d: any }) {
   const s = d.summary
+  const { t } = useI18n()
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <Panel title="Fulfillment rate" >
+      <Panel title={t('dd.fulfillment_rate')}>
         <div className="text-4xl font-light">{pct(s.fulfillment_rate)}</div>
         <div className="text-xs text-muted-foreground mt-1">
-          {fmt(s.fulfilled_requests)} / {fmt(s.total_requests)} requests delivered.
+          {t('dd.fulfillment_help', { n: fmt(s.fulfilled_requests), tot: fmt(s.total_requests) })}
         </div>
       </Panel>
-      <Panel title="Status mix">
+      <Panel title={t('dd.status_mix')}>
         <Donut data={d.by_status} height={200} />
       </Panel>
-      <Panel title="Monthly trend (requests + allocated resources)" full>
+      <Panel title={t('dd.monthly_trend')} full>
         <TrendArea data={d.trend} height={260} keys={[
-          { key: 'requests', name: 'Requests', color: CHART_COLORS[0] },
+          { key: 'requests', name: t('rt.requests'), color: CHART_COLORS[0] },
           { key: 'cpu', name: 'CPU vCPU', color: CHART_COLORS[2] },
           { key: 'ram', name: 'RAM GB', color: CHART_COLORS[3] },
         ]} />
       </Panel>
-      <Panel title="By request type" full>
+      <Panel title={t('dd.by_type')} full>
         <VBar data={d.by_request_type.map((r: any) => ({ name: r.label, value: r.value }))} height={240} />
       </Panel>
     </div>
@@ -232,21 +235,22 @@ function ClosedDetail({ d }: { d: any }) {
 
 function RejectedDetail({ d }: { d: any }) {
   const s = d.summary
+  const { t } = useI18n()
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <Panel title="Rejection rate">
+      <Panel title={t('dd.rejection_rate')}>
         <div className="text-4xl font-light">{pct(s.rejection_rate)}</div>
         <div className="text-xs text-muted-foreground mt-1">
-          {fmt(s.rejected_requests)} / {fmt(s.total_requests)} requests rejected.
+          {t('dd.rejection_help', { n: fmt(s.rejected_requests), tot: fmt(s.total_requests) })}
         </div>
       </Panel>
-      <Panel title="Status mix">
+      <Panel title={t('dd.status_mix')}>
         <Donut data={d.by_status} height={200} />
       </Panel>
-      <Panel title="Top departments overall" full>
+      <Panel title={t('dd.top_depts_overall')} full>
         <HBar data={d.top_departments_by_requests.slice(0, 10)} height={260} />
       </Panel>
-      <Panel title="By request type" full>
+      <Panel title={t('dd.by_type')} full>
         <VBar data={d.by_request_type.map((r: any) => ({ name: r.label, value: r.value }))} height={240} />
       </Panel>
     </div>
@@ -255,14 +259,15 @@ function RejectedDetail({ d }: { d: any }) {
 
 function ResolutionDetail({ d }: { d: any }) {
   const s = d.summary
+  const { t } = useI18n()
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <Panel title="Average lead time"><div className="text-4xl font-light">{hours(s.avg_lead_time_hours)}</div></Panel>
-      <Panel title="Average cycle time"><div className="text-4xl font-light">{hours(s.avg_cycle_time_hours)}</div></Panel>
-      <Panel title="Requests by status" full>
+      <Panel title={t('dd.avg_lead')}><div className="text-4xl font-light">{hours(s.avg_lead_time_hours)}</div></Panel>
+      <Panel title={t('dd.avg_cycle')}><div className="text-4xl font-light">{hours(s.avg_cycle_time_hours)}</div></Panel>
+      <Panel title={t('dd.req_by_status')} full>
         <Donut data={d.by_status} height={240} />
       </Panel>
-      <Panel title="Requests by type" full>
+      <Panel title={t('dd.req_by_type')} full>
         <VBar data={d.by_request_type.map((r: any) => ({ name: r.label, value: r.value }))} height={240} />
       </Panel>
     </div>
@@ -272,39 +277,40 @@ function ResolutionDetail({ d }: { d: any }) {
 function ResourceDetail({ d, k, requested, allocated, unit, topKey }:
   { d: any; k: 'cpu' | 'ram' | 'storage'; requested: number; allocated: number;
     unit: string; topKey: 'top_departments_by_cpu' | 'top_departments_by_ram' | 'top_departments_by_storage' }) {
+  const { t } = useI18n()
   const variance = allocated && requested ? (requested - allocated) : 0
   const variancePct = requested ? (variance / requested * 100) : 0
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-      <Panel title="Requested">
+      <Panel title={t('dd.requested')}>
         <div className="text-3xl font-light">{fmt(requested, { unit })}</div>
       </Panel>
-      <Panel title="Allocated">
+      <Panel title={t('dd.allocated')}>
         <div className="text-3xl font-light">{fmt(allocated, { unit })}</div>
       </Panel>
-      <Panel title="Gap (requested − allocated)">
+      <Panel title={t('dd.gap')}>
         <div className="text-3xl font-light">{fmt(variance, { unit })}</div>
-        <div className="text-xs text-muted-foreground mt-1">{variancePct.toFixed(1)}% of demand</div>
+        <div className="text-xs text-muted-foreground mt-1">{t('dd.gap_of_demand', { p: variancePct.toFixed(1) })}</div>
       </Panel>
 
-      <Panel title="Monthly demand trend" full>
+      <Panel title={t('dd.monthly_demand')} full>
         <TrendArea data={d.trend} height={260} keys={[{ key: k, name: unit }]} />
       </Panel>
 
-      <Panel title="Top consuming departments" full>
+      <Panel title={t('dd.top_consumers')} full>
         <MiniTable
           rows={d[topKey].slice(0, 10)}
           cols={[
-            { key: 'name', label: 'Department' },
-            { key: 'value', label: `Σ ${unit}`, align: 'right' },
+            { key: 'name', label: t('dd.col.department') },
+            { key: 'value', label: t('dd.col.sum', { unit }), align: 'right' },
           ]} />
       </Panel>
 
-      <Panel title="By environment">
+      <Panel title={t('dd.by_env')}>
         <Donut data={d.by_environment} height={220} />
       </Panel>
 
-      <Panel title="By request type" full>
+      <Panel title={t('dd.by_type')} full>
         <VBar data={d.by_request_type.map((r: any) => ({ name: r.label, value: r.value }))} height={220} />
       </Panel>
     </div>

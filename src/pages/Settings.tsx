@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import { useI18n } from '@/lib/i18n'
 
 export function SettingsPage() {
+  const { t } = useI18n()
   const [rates, setRates] = useState<any>(null)
   useEffect(() => {
     fetch('/api/cost-rates').then((r) => r.json()).then(setRates).catch(() => setRates({}))
@@ -12,28 +14,28 @@ export function SettingsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(rates),
     })
-    toast.success('Cost rates saved')
+    toast.success(t('set.saved'))
   }
-  if (!rates) return <div className="text-muted-foreground">Loading…</div>
+  if (!rates) return <div className="text-muted-foreground">{t('common.loading')}</div>
 
   return (
     <div className="space-y-5 max-w-3xl">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-        <p className="text-sm text-muted-foreground">FinOps cost rates and admin configuration.</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t('set.title')}</h1>
+        <p className="text-sm text-muted-foreground">{t('set.subtitle')}</p>
       </div>
 
       <div className="itrm-card p-5 space-y-4">
-        <h2 className="font-semibold">FinOps unit rates (monthly, USD)</h2>
+        <h2 className="font-semibold">{t('set.finops')}</h2>
         <div className="grid grid-cols-3 gap-4">
-          <Field label="CPU per vCPU / month" value={rates.cpu_per_vcpu_month}
+          <Field label={t('set.cpu_rate')} value={rates.cpu_per_vcpu_month}
             onChange={(v) => setRates({ ...rates, cpu_per_vcpu_month: v })} />
-          <Field label="RAM per GB / month" value={rates.ram_per_gb_month}
+          <Field label={t('set.ram_rate')} value={rates.ram_per_gb_month}
             onChange={(v) => setRates({ ...rates, ram_per_gb_month: v })} />
-          <Field label="Storage per GB / month" value={rates.storage_per_gb_month}
+          <Field label={t('set.storage_rate')} value={rates.storage_per_gb_month}
             onChange={(v) => setRates({ ...rates, storage_per_gb_month: v })} />
         </div>
-        <h3 className="font-medium pt-2">Environment multiplier</h3>
+        <h3 className="font-medium pt-2">{t('set.env_mult')}</h3>
         <div className="grid grid-cols-3 md:grid-cols-7 gap-3">
           {Object.entries(rates.env_multiplier || {}).map(([k, v]: any) => (
             <Field key={k} label={k} value={v}
@@ -41,18 +43,15 @@ export function SettingsPage() {
           ))}
         </div>
         <button onClick={save}
-          className="h-10 px-4 rounded-lg bg-primary text-primary-foreground font-medium">
-          Save rates
+          className="h-10 px-4 rounded-lg text-white font-medium"
+          style={{ background: 'linear-gradient(180deg, var(--primary) 0%, var(--primary-soft) 130%)' }}>
+          {t('set.save')}
         </button>
       </div>
 
       <div className="itrm-card p-5">
-        <h2 className="font-semibold">Field Mappings</h2>
-        <p className="text-sm text-muted-foreground mt-2">
-          Column auto-mapping and value normalization (status, department, request-type, environment, server-type)
-          run from the dictionaries in <code>backend/ingest/mappings.py</code>. Phase 2 will add an
-          admin UI here to edit these without code changes.
-        </p>
+        <h2 className="font-semibold">{t('set.field_mappings')}</h2>
+        <p className="text-sm text-muted-foreground mt-2">{t('set.field_mappings_help')}</p>
       </div>
     </div>
   )

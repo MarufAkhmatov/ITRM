@@ -11,19 +11,23 @@ type Ctx = {
 const A = createContext<Ctx | null>(null)
 const LS_KEY = 'itrm.auth'
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null)
-  const [token, setToken] = useState<string | null>(null)
-
-  useEffect(() => {
+function readStored(): { user: User | null; token: string | null } {
+  try {
     const raw = localStorage.getItem(LS_KEY)
-    if (raw) {
-      try {
-        const { user, token } = JSON.parse(raw)
-        if (user && token) { setUser(user); setToken(token) }
-      } catch {}
-    }
-  }, [])
+    if (!raw) return { user: null, token: null }
+    const { user, token } = JSON.parse(raw)
+    if (user && token) return { user, token }
+  } catch {}
+  return { user: null, token: null }
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  // Initialize synchronously so RequireAuth doesn't redirect to /login on the
+  // very first render of an already-authenticated session.
+  const init = readStored()
+  const [user, setUser] = useState<User | null>(init.user)
+  const [token, setToken] = useState<string | null>(init.token)
+  useEffect(() => {}, [])
 
   const login = async (username: string, password: string) => {
     const r = await fetch('/api/auth/login', {
